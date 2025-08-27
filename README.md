@@ -1,15 +1,15 @@
 # Universidad Tecnologica Nacional - Facultad Regional de Cordoba - Ingenieria de Software 2025 - Curso 4k1 - Grupo X
 
 ## Integrantes
-| Integrante |
-| :---: |
-| Alvaro Sueldo |
-| Mateo de Goycoechea |
-| Mateo Sanchez |
-| Pedro Oscar Berecibar |
-| Lautaro Aryan Comas |
+| Nombre | Legajo |
+| :---: | :---: |
+| Alvaro Sueldo | 98999 |
+| Mateo de Goycoechea | 85203 |
+| Mateo Sanchez | 91785 |
+| Pedro Oscar Berecibar | 90344 |
+| Lautaro Aryan Comas | 96586 |
 
-### Estructura del Repositorio
+## Estructura del Repositorio
 ```
 * TPS
    |-TIG
