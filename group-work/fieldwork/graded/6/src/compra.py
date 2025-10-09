@@ -1,0 +1,2 @@
+class Compra():
+    pass
