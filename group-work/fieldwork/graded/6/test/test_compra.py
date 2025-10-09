@@ -46,10 +46,10 @@ def test_comprar_dia_no_disponible(mocker):
     Test para verificar que el metodo comprar no permite compras en dias no disponibles.
     """
 
-    fecha_cerrado = "2023-10-09"
+    fecha_cerrado = "2025-10-06"
 
     compra = Compra()
-    fecha = "2023-10-09"  # Suponiendo que este dia no esta disponible
+    fecha = fecha_cerrado
     cantidad = 2
     edades = [25, 30]
     metodo_pago = 'tarjeta'
