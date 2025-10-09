@@ -8,6 +8,9 @@ class Compra():
 
     def comprar(self, fecha, cantidad, edades, metodo_pago, email):
 
+        if not metodo_pago:
+            raise ValueError("Debe seleccionar un metodo de pago.")
+
         fecha_obj= datetime.strptime(fecha, "%Y-%m-%d").date()
 
         # Asumimos que el parque esta cerrado los Lunes
