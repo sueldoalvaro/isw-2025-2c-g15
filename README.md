@@ -5,7 +5,7 @@
 
 ---
 
-## 👥 Contribuidores  
+## 👥 Contribuyentes  
 
 | Nombre                 | Legajo |
 |-------------------------|--------|
