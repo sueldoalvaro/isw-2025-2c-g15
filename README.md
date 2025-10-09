@@ -1,7 +1,7 @@
 # Ingeniería y Calidad de Software  
 ## Software Configuration Management Plan  
 
-📌 **Repositorio:** [Grupo 14](https://github.com/sueldoalvaro/Grupo20)  
+📌 **Repositorio:** [Grupo 15](https://github.com/sueldoalvaro/isw-2025-2c-g15.git)  
 
 ---
 
