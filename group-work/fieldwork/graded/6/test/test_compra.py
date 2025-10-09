@@ -2,8 +2,6 @@ import pytest
 from src.compra import Compra
 
 def test_compra_con_tarjeta(mocker):
-
-
     """
     Test para verificar que el metodo comprar con tarjeta funciona correctamente.
     
@@ -14,7 +12,7 @@ def test_compra_con_tarjeta(mocker):
     compra = Compra()
 
     #ACT 
-    fecha = "2023-10-10"
+    fecha = "2025-10-10"
     cantidad = 2
     edades = [25, 30]
     metodo_pago = 'tarjeta'
@@ -45,7 +43,7 @@ def test_comprar_dia_no_disponible(mocker):
     """
     Test para verificar que el metodo comprar no permite compras en dias no disponibles.
     """
-
+    # ARRANGE
     fecha_cerrado = "2025-10-06"
 
     compra = Compra()
@@ -55,7 +53,30 @@ def test_comprar_dia_no_disponible(mocker):
     metodo_pago = 'tarjeta'
     email = "cliente@gmail.com"
 
+    # ACT & ASSERT
     with pytest.raises(ValueError, match="El parque se encuentra cerrado en la fecha seleccionada."):
+        compra.comprar(
+            fecha,
+            cantidad,
+            edades,
+            metodo_pago,
+            email)
+        
+def test_comprar_sin_metodo_de_pago(mocker):
+    """
+    Test para verificar que el metodo comprar no permite compras sin metodo de pago.
+    """
+
+    # ARRANGE
+    compra = Compra()
+    fecha = "2025-10-10"
+    cantidad = 1
+    edades = [25]
+    metodo_pago = None
+    email = "cliente@gmail.com"
+
+    # ACT & ASSERT
+    with pytest.raises(ValueError, match="Debe seleccionar un metodo de pago."):
         compra.comprar(
             fecha,
             cantidad,
