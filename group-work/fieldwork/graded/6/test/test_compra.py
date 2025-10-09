@@ -3,6 +3,7 @@ from src.compra import Compra
 
 def test_compra_con_tarjeta(mocker):
 
+
     """
     Test para verificar que el metodo comprar con tarjeta funciona correctamente.
     
@@ -21,5 +22,43 @@ def test_compra_con_tarjeta(mocker):
     compra.comprar(fecha, cantidad, edades, metodo_pago, email)
 
     #ASSERT
-    mock_mp.assert_called_once()
-    mock_mail.assert_called_once()
+    monto_esperado = 1000 * 2
+    mock_mp.assert_called_once_with(
+        monto_esperado,
+        {
+            'numero': '1234-5678-9012-3456',
+            'vencimiento': '12/25',
+            'cvv': '123'
+        }
+    ) 
+    mock_mail.assert_called_once_with(
+        email,
+        {
+            'fecha': fecha,
+            'cantidad': cantidad,
+            'edades': edades,
+            'monto_total': monto_esperado
+        }
+    )
+
+def test_comprar_dia_no_disponible(mocker):
+    """
+    Test para verificar que el metodo comprar no permite compras en dias no disponibles.
+    """
+
+    fecha_cerrado = "2023-10-09"
+
+    compra = Compra()
+    fecha = "2023-10-09"  # Suponiendo que este dia no esta disponible
+    cantidad = 2
+    edades = [25, 30]
+    metodo_pago = 'tarjeta'
+    email = "cliente@gmail.com"
+
+    with pytest.raises(ValueError, match="El parque se encuentra cerrado en la fecha seleccionada."):
+        compra.comprar(
+            fecha,
+            cantidad,
+            edades,
+            metodo_pago,
+            email)
