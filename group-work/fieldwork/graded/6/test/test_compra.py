@@ -83,3 +83,26 @@ def test_comprar_sin_metodo_de_pago(mocker):
             edades,
             metodo_pago,
             email)
+
+def test_comprar_mas_de_diez_entradas(mocker):
+    """
+    Test para verificar que el metodo comprar no permite comprar mas de 10 entradas.
+    """
+    # ARRANGE
+    compra = Compra()
+
+    fecha = "2025-10-10"
+    cantidad = 11
+    edades = [25] * cantidad
+    metodo_pago = 'tarjeta'
+    email = "cliente@gmail.com"
+
+    # ACT & ASSERT
+    with pytest.raises(ValueError, match="No se pueden comprar más de 10 entradas en una sola transacción."):
+        compra.comprar(
+            fecha,
+            cantidad,
+            edades,
+            metodo_pago,
+            email
+        )
