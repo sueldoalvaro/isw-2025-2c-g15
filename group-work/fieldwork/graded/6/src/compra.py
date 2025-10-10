@@ -8,6 +8,9 @@ class Compra():
 
     def comprar(self, fecha, cantidad, edades, metodo_pago, email):
 
+        if cantidad > 10:
+            raise ValueError("No se pueden comprar mas de 10 entradas en una sola transaccion.")
+
         if not metodo_pago:
             raise ValueError("Debe seleccionar un metodo de pago.")
 

@@ -98,7 +98,7 @@ def test_comprar_mas_de_diez_entradas(mocker):
     email = "cliente@gmail.com"
 
     # ACT & ASSERT
-    with pytest.raises(ValueError, match="No se pueden comprar más de 10 entradas en una sola transacción."):
+    with pytest.raises(ValueError, match="No se pueden comprar mas de 10 entradas en una sola transaccion."):
         compra.comprar(
             fecha,
             cantidad,
