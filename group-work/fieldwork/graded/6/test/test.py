@@ -29,4 +29,10 @@ def test_compra_sin_metodo_pago():
     codigo = compra.comprar(fecha="2025-10-10", cantidad=2, edades=[30, 8], metodo_pago=None)
     #ASSERT
     assert codigo is None
+
+def test_compra_fecha_parque_cerrado():
+    compra = Compra()
+    codigo = compra.comprar(fecha="2025-10-12", cantidad=2, edades=[30, 8], metodo_pago="efectivo")
+    #ASSERT
+    assert codigo is None
     
