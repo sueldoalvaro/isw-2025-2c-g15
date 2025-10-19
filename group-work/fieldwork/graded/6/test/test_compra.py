@@ -39,6 +39,30 @@ def test_compra_con_tarjeta(mocker):
         }
     )
 
+def test_compra_exitosa_en_efectivo(mocker):
+    """
+    Verifica que la compra en efectivo no llama a Mercado Pago pero sí envía el mail.
+    """
+    # ARRANGE
+    mock_mp = mocker.patch('src.compra.procesar_pago_mp')
+    mock_mail = mocker.patch('src.compra.enviar_mail_confirmacion')
+    
+    compra = Compra()
+
+    # ACT
+    compra.comprar(
+        fecha="2025-10-11",
+        cantidad=3,
+        edades=[20, 21, 22],
+        metodo_pago='efectivo',
+        email="cliente_efectivo@test.com",
+        tipo_pase='regular' 
+    )
+
+    # ASSERT
+    mock_mp.assert_not_called()
+    mock_mail.assert_called_once()
+
 def test_comprar_dia_no_disponible(mocker):
     """
     Test para verificar que el metodo comprar no permite compras en dias no disponibles.
