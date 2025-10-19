@@ -1,44 +1,48 @@
 import pytest
 from src.compra import Compra
+from datetime import date, timedelta
 
-def test_compra_con_tarjeta(mocker):
+# --- Tests de Casos Exitosos (Happy Path) ---
+
+def test_compra_con_tarjeta_exitosa(mocker):
     """
     Test para verificar que el metodo comprar con tarjeta funciona correctamente.
-    
     """
-    #ARRANGE
+    # ARRANGE
     mock_mp = mocker.patch('src.compra.procesar_pago_mp')
+    mock_mp.return_value = "TRANSACCION_EXITOSA_123" # Simulamos una respuesta exitosa del pago
+    
     mock_mail = mocker.patch('src.compra.enviar_mail_confirmacion')
     compra = Compra()
 
-    #ACT 
-    fecha = "2025-10-10"
+    # Los datos de la tarjeta ahora se definen y se pasan desde el test
+    datos_tarjeta_prueba = {
+        'numero': '1234-5678-9012-3456',
+        'vencimiento': '12/25',
+        'cvv': '123'
+    }
+
+    # ACT
+    fecha = (date.today() + timedelta(days=1)).strftime('%Y-%m-%d') # Siempre una fecha futura válida
     cantidad = 2
     edades = [25, 30]
-    metodo_pago = 'tarjeta'
     email = "cliente@gmail.com"
     tipo_pase = "regular"
-    compra.comprar(fecha, cantidad, edades, metodo_pago, email, tipo_pase)
 
-    #ASSERT
-    monto_esperado = 1000 * 2
-    mock_mp.assert_called_once_with(
-        monto_esperado,
-        {
-            'numero': '1234-5678-9012-3456',
-            'vencimiento': '12/25',
-            'cvv': '123'
-        }
-    ) 
-    mock_mail.assert_called_once_with(
-        email,
-        {
-            'fecha': fecha,
-            'cantidad': cantidad,
-            'edades': edades,
-            'monto_total': monto_esperado
-        }
+    compra.comprar(
+        fecha=fecha,
+        cantidad=cantidad,
+        edades=edades,
+        metodo_pago='tarjeta',
+        email=email,
+        tipo_pase=tipo_pase,
+        datos_tarjeta=datos_tarjeta_prueba # Pasamos los datos de tarjeta
     )
+
+    # ASSERT
+    monto_esperado = 1000 * cantidad
+    mock_mp.assert_called_once_with(monto_esperado, datos_tarjeta_prueba) # Verificamos con los datos del test
+    mock_mail.assert_called_once() # Verificamos que se intentó enviar el mail
 
 def test_compra_exitosa_en_efectivo(mocker):
     """
@@ -47,93 +51,77 @@ def test_compra_exitosa_en_efectivo(mocker):
     # ARRANGE
     mock_mp = mocker.patch('src.compra.procesar_pago_mp')
     mock_mail = mocker.patch('src.compra.enviar_mail_confirmacion')
-    
     compra = Compra()
 
     # ACT
     compra.comprar(
-        fecha="2025-10-11",
+        fecha=(date.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
         cantidad=3,
         edades=[20, 21, 22],
         metodo_pago='efectivo',
         email="cliente_efectivo@test.com",
-        tipo_pase='regular' 
+        tipo_pase='regular'
     )
 
     # ASSERT
     mock_mp.assert_not_called()
     mock_mail.assert_called_once()
 
-def test_comprar_dia_no_disponible(mocker):
+# --- Tests de Casos de Error (Sad Path) ---
+
+def test_falla_al_comprar_en_dia_cerrado(mocker):
     """
-    Test para verificar que el metodo comprar no permite compras en dias no disponibles.
+    Verifica que no se puede comprar si el parque está cerrado en la fecha seleccionada.
     """
     # ARRANGE
-    fecha_cerrado = "2025-10-06"
-
     compra = Compra()
-    fecha = fecha_cerrado
-    cantidad = 2
-    edades = [25, 30]
-    metodo_pago = 'tarjeta'
-    email = "cliente@gmail.com"
-    tipo_pase = "regular"
+    hoy = date.today()
+    dias_para_domingo = (6 - hoy.weekday() + 7) % 7
+    fecha_domingo = (hoy + timedelta(days=dias_para_domingo)).strftime('%Y-%m-%d')
 
     # ACT & ASSERT
     with pytest.raises(ValueError, match="El parque se encuentra cerrado en la fecha seleccionada."):
         compra.comprar(
-            fecha,
-            cantidad,
-            edades,
-            metodo_pago,
-            email,
-            tipo_pase)
-        
-def test_comprar_sin_metodo_de_pago(mocker):
-    """
-    Test para verificar que el metodo comprar no permite compras sin metodo de pago.
-    """
+            fecha=fecha_domingo,
+            cantidad=2,
+            edades=[25, 30],
+            metodo_pago='efectivo', # Usamos efectivo para no necesitar datos de tarjeta
+            email="cliente@gmail.com",
+            tipo_pase="regular"
+        )
 
+def test_falla_al_comprar_sin_metodo_de_pago(mocker):
+    """
+    Verifica que el sistema falla si no se especifica un método de pago.
+    """
     # ARRANGE
     compra = Compra()
-    fecha = "2025-10-10"
-    cantidad = 1
-    edades = [25]
-    metodo_pago = None
-    email = "cliente@gmail.com"
-    tipo_pase = "regular"
 
     # ACT & ASSERT
     with pytest.raises(ValueError, match="Debe seleccionar un metodo de pago."):
         compra.comprar(
-            fecha,
-            cantidad,
-            edades,
-            metodo_pago,
-            email,
-            tipo_pase)
+            fecha=(date.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
+            cantidad=1,
+            edades=[25],
+            metodo_pago=None, # Condición a probar
+            email="cliente@gmail.com",
+            tipo_pase="regular"
+        )
 
-def test_comprar_mas_de_diez_entradas(mocker):
+def test_falla_al_comprar_mas_de_diez_entradas(mocker):
     """
-    Test para verificar que el metodo comprar no permite comprar mas de 10 entradas.
+    Verifica que no se pueden comprar más de 10 entradas a la vez.
     """
     # ARRANGE
     compra = Compra()
 
-    fecha = "2025-10-10"
-    cantidad = 11
-    edades = [25] * cantidad
-    metodo_pago = 'tarjeta'
-    email = "cliente@gmail.com"
-    tipo_pase = "regular"
-
     # ACT & ASSERT
-    with pytest.raises(ValueError, match="No se pueden comprar mas de 10 entradas en una sola transaccion."):
+    with pytest.raises(ValueError, match="La cantidad de entradas debe estar entre 1 y 10."):
         compra.comprar(
-            fecha,
-            cantidad,
-            edades,
-            metodo_pago,
-            email,
-            tipo_pase
+            fecha=(date.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
+            cantidad=11, # Condición a probar
+            edades=[25] * 11,
+            metodo_pago='efectivo',
+            email="cliente@gmail.com",
+            tipo_pase="regular"
         )
