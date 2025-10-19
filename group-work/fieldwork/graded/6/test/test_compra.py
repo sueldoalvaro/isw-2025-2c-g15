@@ -17,7 +17,8 @@ def test_compra_con_tarjeta(mocker):
     edades = [25, 30]
     metodo_pago = 'tarjeta'
     email = "cliente@gmail.com"
-    compra.comprar(fecha, cantidad, edades, metodo_pago, email)
+    tipo_pase = "regular"
+    compra.comprar(fecha, cantidad, edades, metodo_pago, email, tipo_pase)
 
     #ASSERT
     monto_esperado = 1000 * 2
@@ -76,6 +77,7 @@ def test_comprar_dia_no_disponible(mocker):
     edades = [25, 30]
     metodo_pago = 'tarjeta'
     email = "cliente@gmail.com"
+    tipo_pase = "regular"
 
     # ACT & ASSERT
     with pytest.raises(ValueError, match="El parque se encuentra cerrado en la fecha seleccionada."):
@@ -84,7 +86,8 @@ def test_comprar_dia_no_disponible(mocker):
             cantidad,
             edades,
             metodo_pago,
-            email)
+            email,
+            tipo_pase)
         
 def test_comprar_sin_metodo_de_pago(mocker):
     """
@@ -98,6 +101,7 @@ def test_comprar_sin_metodo_de_pago(mocker):
     edades = [25]
     metodo_pago = None
     email = "cliente@gmail.com"
+    tipo_pase = "regular"
 
     # ACT & ASSERT
     with pytest.raises(ValueError, match="Debe seleccionar un metodo de pago."):
@@ -106,7 +110,8 @@ def test_comprar_sin_metodo_de_pago(mocker):
             cantidad,
             edades,
             metodo_pago,
-            email)
+            email,
+            tipo_pase)
 
 def test_comprar_mas_de_diez_entradas(mocker):
     """
@@ -120,6 +125,7 @@ def test_comprar_mas_de_diez_entradas(mocker):
     edades = [25] * cantidad
     metodo_pago = 'tarjeta'
     email = "cliente@gmail.com"
+    tipo_pase = "regular"
 
     # ACT & ASSERT
     with pytest.raises(ValueError, match="No se pueden comprar mas de 10 entradas en una sola transaccion."):
@@ -128,5 +134,6 @@ def test_comprar_mas_de_diez_entradas(mocker):
             cantidad,
             edades,
             metodo_pago,
-            email
+            email,
+            tipo_pase
         )

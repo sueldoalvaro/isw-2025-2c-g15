@@ -3,10 +3,17 @@ from datetime import datetime
 
 class Compra():
     def __init__(self):
-        self.precio_unitario = 1000  
+
+        self.precios = {
+            'regular': 1000,
+            'vip': 2000
+        }
 
 
-    def comprar(self, fecha, cantidad, edades, metodo_pago, email):
+    def comprar(self, fecha, cantidad, edades, metodo_pago, email, tipo_pase, datos_tarjeta=None):
+
+        precio_unitario = self.precios.get(tipo_pase)
+        monto_total = precio_unitario * cantidad
 
         if cantidad > 10:
             raise ValueError("No se pueden comprar mas de 10 entradas en una sola transaccion.")
@@ -22,7 +29,7 @@ class Compra():
 
 
         if metodo_pago == 'tarjeta':
-            monto_total = self.precio_unitario * cantidad
+            
             datos_tarjeta = {
                 'numero': '1234-5678-9012-3456',
                 'vencimiento': '12/25',
@@ -38,4 +45,14 @@ class Compra():
                     'monto_total': monto_total
                 }
                 enviar_mail_confirmacion(email, detalles_compra)
+        
+        elif metodo_pago == 'efectivo':
+            
+            detalles_compra = {
+                'fecha': fecha,
+                'cantidad': cantidad,
+                'edades': edades,
+                'monto_total': monto_total
+            }
+            enviar_mail_confirmacion(email, detalles_compra)
         
