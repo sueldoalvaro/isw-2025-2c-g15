@@ -33,5 +33,5 @@ class Compra():
     def finalizar_compra(self, mock_mp, mock_email_service):
         if self.medio_pago == MedioPago.TARJETA:
             mock_mp.procesar_pago()
-        mock_email_service.enviar_confirmacion()
+        mock_email_service.enviar_confirmacion(self)
         return {'cantidad_comprada': self.cantidad_entradas, 'fecha_visita': self.fecha}
