@@ -17,6 +17,14 @@ class FechaPasadaError(ErrorCompra):
     pass
 
 
+class UsuarioNoRegistradoError(ErrorCompra):    
+    pass
+
+
+class MedioPagoError(ErrorCompra):
+    pass
+
+
 class TipoEntrada(Enum):
     REGULAR = 1
     VIP = 2
@@ -32,5 +40,14 @@ class MockMP():
         self.redireccion = False
 
     def procesar_pago(self) -> bool:
-        # Lógica simulada para procesar el pago
-        return True
+        self.redireccion = True
+        
+    
+
+class MockEmailService():
+    def __init__(self):
+        self.email_enviado = False
+
+    def enviar_confirmacion(self) -> bool:
+        self.email_enviado = True
+        
