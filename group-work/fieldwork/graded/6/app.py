@@ -28,13 +28,17 @@ def comprar():
 
         # Ejecutamos la lógica que ya probaste
         compra.validar_compra()
+        
         resultado = compra.finalizar_compra(MockMP(), MockEmailService()) # Usamos los mocks por ahora
+        total_compra = compra.calcular_total()
 
+        # 2. Añadí el 'total' al diccionario de la respuesta
         return jsonify({
             "status": "exito",
-            "mensaje": f"¡Compra exitosa! Se compraron {resultado['cantidad_comprada']} entradas."
+            "mensaje": f"¡Compra exitosa! Se compraron {resultado['cantidad_comprada']} entradas.",
+            "total": total_compra
         }), 200
-
+    
     except ErrorCompra as e:
         # Si la validación falla, devolvemos un error
         return jsonify({"status": "error", "mensaje": str(e)}), 400
@@ -46,11 +50,23 @@ def comprar():
         
         # 3. Devolvemos la respuesta genérica como antes
         return jsonify({"status": "error", "mensaje": "Ocurrió un error inesperado."}), 500
-# Mocks para que el servidor funcione
+
+
 class MockMP:
-    def redirigir_a_pago(self, monto): pass
+    def __init__(self):
+        self.redireccion = False
+
+    def procesar_pago(self) -> bool:
+        self.redireccion = True
+
+
 class MockEmailService:
-    def enviar_confirmacion(self, compra): pass
+    def __init__(self):
+        self.email_enviado = False
+
+    def enviar_confirmacion(self, compra):
+        self.email_enviado = True
+
 
 if __name__ == '__main__':
     app.run(debug=True)

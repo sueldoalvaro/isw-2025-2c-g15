@@ -5,103 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compra de Entradas - EcoHarmony Park</title>
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #fff;
-            padding: 2rem 3rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-        }
-        h1 {
-            color: #2c5282;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #4a5568;
-        }
-        input[type="date"], input[type="number"], input[type="text"] {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #cbd5e0;
-            border-radius: 6px;
-            box-sizing: border-box;
-            transition: border-color 0.2s;
-        }
-        input:focus {
-            outline: none;
-            border-color: #4299e1;
-            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
-        }
-        .radio-group label {
-            display: inline-block;
-            margin-right: 1rem;
-            font-weight: 500;
-        }
-        button {
-            width: 100%;
-            padding: 0.85rem;
-            background-color: #38a169;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        button:hover {
-            background-color: #2f855a;
-        }
-        /* ESTILOS PARA LA ALERTA MEJORADA */
-        #alert-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 1000;
-            display: none; /* Oculto por defecto */
-            animation: fadeInDown 0.5s forwards;
-        }
-        .success {
-            background-color: #38a169;
-            color: white;
-        }
-        .error {
-            background-color: #e53e3e;
-            color: white;
-        }
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -20px);
-            }
-            to {
-                opacity: 1;
-                transform: translate(-50%, 0);
-            }
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f4f8; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .container { background-color: #fff; padding: 2rem 3rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); width: 100%; max-width: 500px; }
+        h1 { color: #2c5282; text-align: center; margin-bottom: 1.5rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #4a5568; }
+        input[type="date"], input[type="number"] { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; transition: border-color 0.2s; }
+        input:focus { outline: none; border-color: #4299e1; box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5); }
+        .radio-group label { display: inline-block; margin-right: 1rem; font-weight: 500; }
+        button { width: 100%; padding: 0.85rem; background-color: #38a169; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s; }
+        button:hover { background-color: #2f855a; }
+        #alert-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; display: none; animation: fadeInDown 0.5s forwards; }
+        .success { background-color: #38a169; color: white; }
+        .error { background-color: #e53e3e; color: white; }
+        @keyframes fadeInDown { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+        /* Estilos para los inputs de edad dinámicos */
+        #ages-container .age-input-group { display: flex; align-items: center; margin-bottom: 0.5rem; }
+        #ages-container label { margin-right: 10px; width: 120px; margin-bottom: 0; }
+        .form-hint { font-size: 0.8rem; color: #718096; margin-top: -10px; }
     </style>
 </head>
 <body>
@@ -122,8 +43,9 @@
             </div>
 
             <div class="form-group">
-                <label for="ages">Edades de los Visitantes (separadas por coma)</label>
-                <input type="text" id="ages" name="ages" placeholder="Ej: 30, 8, 15" required>
+                <label>Edades de los Visitantes</label>
+                <div id="ages-container"></div>
+                <p class="form-hint">Las edades se generarán automáticamente.</p>
             </div>
 
             <div class="form-group">
@@ -149,19 +71,59 @@
     <script>
         const form = document.getElementById('purchase-form');
         const alertContainer = document.getElementById('alert-container');
+        const quantityInput = document.getElementById('quantity');
+        const agesContainer = document.getElementById('ages-container');
+
+        // --- LÓGICA PARA INPUTS DE EDAD DINÁMICOS ---
+        function generateAgeInputs(quantity) {
+            agesContainer.innerHTML = ''; // Limpiar contenedor
+            for (let i = 1; i <= quantity; i++) {
+                const group = document.createElement('div');
+                group.className = 'age-input-group';
+                
+                const label = document.createElement('label');
+                label.textContent = `Edad Visitante ${i}:`;
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.className = 'age-input';
+                input.min = '1';
+                input.required = true;
+                
+                group.appendChild(label);
+                group.appendChild(input);
+                agesContainer.appendChild(group);
+            }
+        }
+
+        quantityInput.addEventListener('input', () => {
+            const quantity = parseInt(quantityInput.value, 10) || 0;
+            if (quantity > 0 && quantity <= 10) {
+                generateAgeInputs(quantity);
+            } else {
+                agesContainer.innerHTML = '';
+            }
+        });
 
         // --- LÓGICA PARA VALORES PREDETERMINADOS ---
         document.addEventListener('DOMContentLoaded', function() {
-            // Poner cantidad y edades por defecto
-            document.getElementById('quantity').value = 2;
-            document.getElementById('ages').value = '30, 8';
+            const defaultQuantity = 2;
+            quantityInput.value = defaultQuantity;
+            generateAgeInputs(defaultQuantity); // Generar inputs de edad iniciales
+            
+            // Llenar las edades por defecto
+            const defaultAges = [30, 8];
+            const ageInputs = document.querySelectorAll('.age-input');
+            ageInputs.forEach((input, index) => {
+                if (defaultAges[index]) {
+                    input.value = defaultAges[index];
+                }
+            });
 
-            // Calcular y poner el próximo sábado por defecto
             const today = new Date();
-            const dayOfWeek = today.getDay(); // Domingo=0, Lunes=1, ..., Sábado=6
+            const dayOfWeek = today.getDay();
             const daysUntilSaturday = (6 - dayOfWeek + 7) % 7;
-            const nextSaturday = new Date(today.setDate(today.getDate() + daysUntilSaturday));
-            // Formatear a YYYY-MM-DD para el input
+            const nextSaturday = new Date(new Date().setDate(today.getDate() + daysUntilSaturday));
             document.getElementById('visit-date').value = nextSaturday.toISOString().split('T')[0];
         });
         
@@ -170,11 +132,14 @@
             event.preventDefault();
             alertContainer.style.display = 'none';
 
+            const ageInputs = document.querySelectorAll('.age-input');
+            const ages = Array.from(ageInputs).map(input => input.value);
+
             const formData = new FormData(form);
             const data = {
                 fecha: formData.get('visit-date'),
                 cantidad: formData.get('quantity'),
-                edades: formData.get('ages').split(','),
+                edades: ages,
                 tipoPase: formData.get('pass-type'),
                 medioPago: formData.get('payment-method'),
             };
@@ -187,7 +152,9 @@
             .then(response => response.json())
             .then(apiResponse => {
                 if (apiResponse.status === 'exito') {
-                    showMessage(apiResponse.mensaje, 'success');
+                    const totalFormatted = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(apiResponse.total);
+                    const successMsg = `${apiResponse.mensaje} Total: ${totalFormatted}.`;
+                    showMessage(successMsg, 'success');
                 } else {
                     showMessage(apiResponse.mensaje, 'error');
                 }
@@ -203,12 +170,10 @@
             alertContainer.className = type;
             alertContainer.style.display = 'block';
 
-            // Ocultar el mensaje después de 5 segundos
             setTimeout(() => {
                 alertContainer.style.display = 'none';
             }, 5000);
         }
     </script>
-
 </body>
 </html>

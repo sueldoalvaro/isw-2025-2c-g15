@@ -1,7 +1,7 @@
 import pytest
 from datetime import date
 from src.compra import Compra
-from src.utils import TipoEntrada, MedioPago, LimiteEntradasError, ParqueCerradoError, FechaPasadaError, MockMP, MockEmailService, UsuarioNoRegistradoError, MedioPagoError
+from src.utils import TipoEntrada, MedioPago, EdadesYCantidadesError,LimiteEntradasError, ParqueCerradoError, FechaPasadaError, MockMP, MockEmailService, UsuarioNoRegistradoError, MedioPagoError
 
 class TestCompra:
     @pytest.fixture
@@ -64,19 +64,19 @@ class TestCompra:
         # ASSERT
         assert compra_valida_fixture_efectivo.validar_compra() is True
 
-    def test_compra_sin_medio_pago(self, usuario_registrado):
+    def test_compra_edades_y_cantidades_diferentes(self, usuario_registrado):
         # ARRANGE
         compra = Compra(
             fecha=date(2025, 10, 25),
-            cantidad_entradas=2,
+            cantidad_entradas=3,
             edades=[30, 8],
             tipo_entrada=TipoEntrada.VIP,
-            medio_pago=None,
+            medio_pago=MedioPago.EFECTIVO,
             usuario=usuario_registrado
         )
 
         # ACT & ASSERT
-        with pytest.raises(MedioPagoError):
+        with pytest.raises(EdadesYCantidadesError, match='La cantidad de edades no coincide con la cantidad de entradas'):
             compra.validar_compra()
 
     def test_compra_fecha_pasada(self, usuario_registrado):

@@ -1,5 +1,5 @@
 from datetime import date
-from src.utils import TipoEntrada, MedioPago, LimiteEntradasError, ParqueCerradoError, FechaPasadaError, UsuarioNoRegistradoError, MedioPagoError
+from src.utils import TipoEntrada, MedioPago, LimiteEntradasError, EdadesYCantidadesError, ParqueCerradoError, FechaPasadaError, UsuarioNoRegistradoError, MedioPagoError
 
 class Compra():
     def __init__(self, fecha, cantidad_entradas, edades, tipo_entrada, medio_pago, usuario):
@@ -21,6 +21,8 @@ class Compra():
             raise UsuarioNoRegistradoError('El usuario no está registrado')
         if self.medio_pago not in [MedioPago.EFECTIVO, MedioPago.TARJETA]:
             raise MedioPagoError('Medio de pago no válido')
+        if len(self.edades) != self.cantidad_entradas:
+            raise EdadesYCantidadesError('La cantidad de edades no coincide con la cantidad de entradas')
         return True
     
     def calcular_total(self):

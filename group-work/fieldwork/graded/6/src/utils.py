@@ -25,6 +25,10 @@ class MedioPagoError(ErrorCompra):
     pass
 
 
+class EdadesYCantidadesError(ErrorCompra):
+    pass
+
+
 class TipoEntrada(Enum):
     REGULAR = 1
     VIP = 2
@@ -48,6 +52,6 @@ class MockEmailService():
     def __init__(self):
         self.email_enviado = False
 
-    def enviar_confirmacion(self) -> bool:
+    def enviar_confirmacion(self, compra) -> bool:
         self.email_enviado = True
         
