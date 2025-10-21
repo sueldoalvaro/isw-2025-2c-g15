@@ -1,0 +1,16 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+
+# Node.js / Vite (para tu futuro frontend)
+node_modules/
+dist/
+.env.local
+
+# Archivos de SO e IDE
+.vscode/
+.idea/
+.DS_Store
