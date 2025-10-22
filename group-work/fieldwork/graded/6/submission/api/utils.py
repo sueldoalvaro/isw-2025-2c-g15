@@ -39,7 +39,7 @@ class MedioPago(Enum):
     TARJETA = 2
 
 
-class MockMP():
+class MockMP:
     def __init__(self):
         self.redireccion = False
 
@@ -48,7 +48,7 @@ class MockMP():
         
     
 
-class MockEmailService():
+class MockEmailService:
     def __init__(self):
         self.email_enviado = False
 

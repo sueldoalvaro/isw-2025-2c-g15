@@ -1,8 +1,9 @@
 from datetime import date, datetime
-from api.utils import MedioPago, SinEntradasError, LimiteEntradasError, ParqueCerradoError, FechaPasadaError, UsuarioNoRegistradoError, MedioPagoError, esta_abierto
+from api.utils import (MedioPago, SinEntradasError, LimiteEntradasError, ParqueCerradoError, 
+                       FechaPasadaError, UsuarioNoRegistradoError, MedioPagoError, esta_abierto)
 from api.entrada import Entrada
 
-class Compra():
+class Compra:
     def __init__(self, fecha, entradas, medio_pago):
         self.fecha = fecha
         self.entradas = entradas
