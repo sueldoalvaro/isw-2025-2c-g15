@@ -1,4 +1,5 @@
 import sqlite3
+from datetime import datetime
 
 class Parque:
     def __init__(self, db_path: str):
@@ -8,16 +9,7 @@ class Parque:
         """
         Persiste una compra y sus entradas.
 
-        Parámetros (kw-only):
-        - id_usuario: int -> FK a usuarios.id ya existente
-        - datos_formulario: dict con claves:
-          - fecha: str
-          - cantidad: str | int
-          - edades: list[int]
-          - tiposPase: list[str] (uno por entrada) O tipoPase: str (mismo para todas)
-          - medioPago: str
 
-        Retorna: id de la compra creada.
         """
         # Validación y extracción de datos del formulario
         try:
@@ -54,13 +46,20 @@ class Parque:
             if cur.fetchone() is None:
                 raise UsuarioNoRegistradoError(f"El usuario con id {id_usuario} no está registrado en el sistema")
 
-            # A) Insertar compra
+            # A) Insertar compra (forzando fecha_compra en horario local del sistema para evitar desfase UTC)
+            # Usamos astimezone() que devuelve la hora local sin requerir base IANA (funciona en Windows)
+            try:
+                ahora_local = datetime.now().astimezone().strftime("%Y-%m-%d %H:%M:%S")
+            except Exception:
+                # Fallback simple si algo falla
+                ahora_local = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
             cur.execute(
                 """
-                INSERT INTO compras (id_usuario, fecha_visita, cantidad, medio_pago)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO compras (id_usuario, fecha_visita, fecha_compra, cantidad, medio_pago)
+                VALUES (?, ?, ?, ?, ?)
                 """,
-                (id_usuario, fecha_visita, cantidad, medio_pago),
+                (id_usuario, fecha_visita, ahora_local, cantidad, medio_pago),
             )
             id_compra = cur.lastrowid
 

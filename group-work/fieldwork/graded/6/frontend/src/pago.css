@@ -3,19 +3,19 @@
    ================================= */
 
 :root {
-    --mp-blue: #009EE3;
-    --mp-dark-blue: #0077B3;
-    --mp-green: #00A650;
-    --mp-yellow: #FFE600;
+    --mp-blue: #3da35d;
+    --mp-dark-blue: #3e8914;
+    --mp-green: #3da35d;
+    --mp-yellow: #96e072;
     --mp-red: #F23D4F;
-    --mp-gray-100: #F5F5F5;
-    --mp-gray-200: #EDEDED;
-    --mp-gray-300: #CCCCCC;
-    --mp-gray-700: #666666;
-    --mp-gray-900: #333333;
+    --mp-gray-100: #e8fccf;
+    --mp-gray-200: #96e072;
+    --mp-gray-300: #3da35d;
+    --mp-gray-700: #3e8914;
+    --mp-gray-900: #134611;
     --border-radius: 8px;
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
-    --shadow-md: 0 4px 8px rgba(0,0,0,0.15);
+    --shadow-sm: 0 2px 4px rgba(19,70,17,0.1);
+    --shadow-md: 0 4px 8px rgba(19,70,17,0.15);
     --transition: all 0.3s ease;
 }
 
@@ -26,8 +26,8 @@
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #e8fccf 0%, #96e072 100%);
     min-height: 100vh;
     padding: 20px;
     color: var(--mp-gray-900);
@@ -53,9 +53,9 @@ body {
 }
 
 .current-user-badge {
-    background: #e3f2fd;
-    color: #0d47a1;
-    border-left: 4px solid #42a5f5;
+    background: #e8fccf;
+    color: #134611;
+    border-left: 4px solid #3da35d;
     padding: 10px 14px;
     font-size: 14px;
 }
@@ -75,7 +75,7 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--mp-green);
+    color: #3da35d;
     font-size: 14px;
     font-weight: 500;
 }
@@ -128,7 +128,7 @@ body {
 }
 
 .summary-total .summary-value {
-    color: var(--mp-green);
+    color: #3e8914;
 }
 
 /* ========== PAYMENT FORM ========== */
@@ -359,7 +359,7 @@ body {
     padding: 12px;
     border-radius: 6px;
     font-size: 14px;
-    border-left: 3px solid var(--mp-blue);
+    border-left: 3px solid #3da35d;
 }
 
 .test-card strong {

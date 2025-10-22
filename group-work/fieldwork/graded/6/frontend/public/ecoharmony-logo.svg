@@ -1,0 +1,23 @@
+<svg class="w-32 h-32 mb-6" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<!-- 1. Círculo Contenedor: Representa la tierra, totalidad y armonía (Nyanza - el más claro) -->
+<circle cx="50" cy="50" r="48" style="fill:#e8fccf;"/>
+
+<!-- 2. Base Ondulada: Representa agua, caminos o colinas (Pigment green) -->
+<path d="M 25 85 Q 50 80 75 85" stroke-linecap="round" style="stroke:#3da35d; fill:none; stroke-width:4;"/>
+<path d="M 30 90 Q 50 85 70 90" stroke-linecap="round" style="stroke:#3da35d; fill:none; stroke-width:4;"/>
+
+<!-- 3. Tronco y Ramas: Estilizado para sugerir un abrazo o protección (Pakistan green - el más oscuro) -->
+<!-- Tronco principal -->
+<path d="M 50 88 V 60" stroke-linecap="round" style="stroke:#134611; fill:none; stroke-width:7;"/>
+<!-- Ramas que "abrazan" -->
+<path d="M 50 70 C 40 65, 35 50, 45 40" stroke-linecap="round" style="stroke:#134611; fill:none; stroke-width:7;"/>
+<path d="M 50 70 C 60 65, 65 50, 55 40" stroke-linecap="round" style="stroke:#134611; fill:none; stroke-width:7;"/>
+
+<!-- 4. Copa / Hojas: Formas orgánicas y simples (India green y Light green) -->
+<circle cx="50" cy="32" r="10" style="fill:#3e8914;"/> <!-- India green -->
+<circle cx="40" cy="42" r="10" style="fill:#3e8914;"/> <!-- India green -->
+<circle cx="60" cy="42" r="10" style="fill:#3e8914;"/> <!-- India green -->
+<circle cx="50" cy="42" r="10" style="fill:#96e072;"/> <!-- Light green -->
+
+
+</svg>

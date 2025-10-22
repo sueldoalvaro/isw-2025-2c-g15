@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS compras (
     fecha_visita  TEXT NOT NULL,
     
     -- Tu idea de 'fechaHora' (cuándo se hizo la compra)
-    fecha_compra  TEXT NOT NULL DEFAULT (datetime('now')),
+    -- Nota: SQLite datetime('now') devuelve UTC. Usamos 'localtime' para hora local por defecto en nuevas DBs.
+    fecha_compra  TEXT NOT NULL DEFAULT (datetime('now','localtime')),
     
     -- Tu idea de 'medio de pago'
     medio_pago    TEXT,

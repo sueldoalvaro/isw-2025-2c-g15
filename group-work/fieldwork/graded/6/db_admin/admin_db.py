@@ -94,7 +94,7 @@ def consultar_todo():
                     print(f"  Fecha visita: {compra['fecha_visita']}")
                     print(f"  Cantidad: {compra['cantidad']}")
                     print(f"  Medio de pago: {compra['medio_pago']}")
-                    
+                    print(f"  Fecha y hora: {compra['fecha_compra']}")
                     # Buscar entradas de esta compra
                     cur.execute("""
                         SELECT * FROM entradas 

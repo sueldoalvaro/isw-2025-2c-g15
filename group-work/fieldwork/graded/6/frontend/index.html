@@ -4,7 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compra de Entradas - EcoHarmony Park</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/styles.css">
+    <link rel="icon" href="/public/ecoharmony-logo.svg" type="image/svg+xml">
 </head>
 <body>
 
@@ -17,14 +21,18 @@
             <div id="purchase-summary"></div>
             <div class="modal-actions">
                 <button id="confirm-btn" class="btn-confirm">Confirmar Compra</button>
-                <button id="cancel-btn" class="btn-cancel">Cancelar</button>
+                <button id="cancel-btn" class="btn-cancel cancel-red">Cancelar</button>
             </div>
         </div>
     </div>
 
     <div class="container">
+        <div class="logo-header">
+            <img src="/public/ecoharmony-logo.svg" alt="EcoHarmony Park" class="park-logo">
+            <h1>🎟️ Compra de Entradas</h1>
+            <p class="park-subtitle">EcoHarmony Park</p>
+        </div>
         <div id="current-user" class="current-user" style="display:none;"></div>
-        <h1>🎟️ Compra de Entradas</h1>
         <form id="purchase-form">
             <div class="form-group">
                 <label for="visit-date">Fecha de Visita</label>

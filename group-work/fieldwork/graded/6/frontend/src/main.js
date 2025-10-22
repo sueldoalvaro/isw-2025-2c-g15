@@ -275,9 +275,11 @@ confirmBtn.addEventListener('click', function() {
             // Si es efectivo, agregar recordatorio
             if (pendingPurchaseData.medioPago === 'EFECTIVO') {
                 successMsg += ' Recordá pagar en la boletería del parque el día de tu visita.';
+                // Mostrar mensaje destacado, centrado y grande
+                showMessage(successMsg, 'success alert-center alert-large');
+            } else {
+                showMessage(successMsg, 'success');
             }
-            
-            showMessage(successMsg, 'success');
             form.reset();
             generateVisitorInputs(defaultQuantity);
             updatePaymentInfo(); // Actualizar mensaje de pago
