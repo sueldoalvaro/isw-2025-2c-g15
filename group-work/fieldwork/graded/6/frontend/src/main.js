@@ -2,6 +2,27 @@ const form = document.getElementById('purchase-form');
 const alertContainer = document.getElementById('alert-container');
 const quantityInput = document.getElementById('quantity');
 const visitorsContainer = document.getElementById('visitors-container');
+const currentUserEl = document.getElementById('current-user');
+
+// --- CARGAR USUARIO ACTUAL (DEMO) ---
+async function cargarUsuarioActual() {
+    try {
+        const res = await fetch('http://127.0.0.1:5000/usuario-actual');
+        if (!res.ok) return;
+        const usuario = await res.json();
+        if (usuario && usuario.email) {
+            currentUserEl.textContent = `Comprando como: ${usuario.nombre} (${usuario.email})`;
+            currentUserEl.style.display = 'block';
+            sessionStorage.setItem('usuario_actual', JSON.stringify(usuario));
+        }
+    } catch (e) {
+        // Silencioso: si no carga, no bloquea la compra
+        console.warn('No se pudo cargar usuario actual', e);
+    }
+}
+
+// Iniciar carga de usuario actual en cuanto carga el script
+cargarUsuarioActual();
 
 // --- LÓGICA PARA INPUTS DINÁMICOS DE VISITANTES (EDAD + TIPO) ---
 function generateVisitorInputs(quantity) {

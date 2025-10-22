@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cargarDatosCompra();
     configurarEventListeners();
     autoFillTestData(); // Para testing
+    mostrarUsuarioActual();
 });
 
 // ========== CARGAR DATOS DE COMPRA ==========
@@ -61,6 +62,31 @@ function actualizarResumenCompra() {
         `${compraData.cantidad} entrada(s)`;
     document.getElementById('total-pago').textContent = 
         `$${compraData.total.toLocaleString('es-AR')}`;
+}
+
+// ========== MOSTRAR USUARIO ACTUAL ==========
+async function mostrarUsuarioActual() {
+    const badge = document.getElementById('current-user-badge');
+    try {
+        const cache = sessionStorage.getItem('usuario_actual');
+        if (cache) {
+            const u = JSON.parse(cache);
+            badge.textContent = `Comprando como: ${u.nombre} (${u.email})`;
+            badge.style.display = 'block';
+            return;
+        }
+        // Fallback: pedir al backend
+        const res = await fetch('http://127.0.0.1:5000/usuario-actual');
+        if (res.ok) {
+            const u = await res.json();
+            badge.textContent = `Comprando como: ${u.nombre} (${u.email})`;
+            badge.style.display = 'block';
+            sessionStorage.setItem('usuario_actual', JSON.stringify(u));
+        }
+    } catch (e) {
+        // No bloquear flujo si falla
+        console.warn('No se pudo mostrar usuario actual', e);
+    }
 }
 
 // ========== EVENT LISTENERS ==========

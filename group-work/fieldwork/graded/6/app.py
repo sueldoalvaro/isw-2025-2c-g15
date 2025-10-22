@@ -81,6 +81,38 @@ def pago_mercadopago():
     frontend_path = Path(__file__).parent / 'frontend' / 'pago.html'
     return frontend_path.read_text(encoding='utf-8')
 
+@app.route("/usuario-actual")
+def usuario_actual():
+    """Retorna el usuario actual utilizado para las compras (demo).
+
+    Para simplificar, el proyecto usa un usuario por defecto. Esta ruta asegura
+    que exista en la base de datos y expone sus datos para mostrarlos en el frontend.
+    """
+    try:
+        usuario_email = 'alvarosueldoc@gmail.com'
+        usuario_nombre = 'Alvaro Sueldo'
+
+        with sqlite3.connect(DB_PATH) as conn:
+            cur = conn.cursor()
+            cur.execute("SELECT id, email, nombre FROM usuarios WHERE email = ?", (usuario_email,))
+            row = cur.fetchone()
+            if row:
+                id_usuario, email, nombre = row
+            else:
+                cur.execute("INSERT INTO usuarios (email, nombre) VALUES (?, ?)", (usuario_email, usuario_nombre))
+                id_usuario = cur.lastrowid
+                email = usuario_email
+                nombre = usuario_nombre
+
+        return jsonify({
+            "id": id_usuario,
+            "email": email,
+            "nombre": nombre
+        }), 200
+    except Exception as e:
+        print(f"⚠️  Error en /usuario-actual: {e}")
+        return jsonify({"error": "No se pudo obtener el usuario actual"}), 500
+
 @app.route("/procesar-pago", methods=["POST"])
 def procesar_pago():
     """
