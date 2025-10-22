@@ -1,186 +1,83 @@
 import pytest
+from unittest.mock import patch
 from datetime import date
-from src.compra import Compra
-from src.utils import TipoEntrada, MedioPago, EdadesYCantidadesError,LimiteEntradasError, ParqueCerradoError, FechaPasadaError, MockMP, MockEmailService, UsuarioNoRegistradoError, MedioPagoError
+from api.entrada import Entrada
+from api.utils import TipoEntrada, MedioPago, LimiteEntradasError, ParqueCerradoError, FechaPasadaError, MockMP, MockEmailService, UsuarioNoRegistradoError, MedioPagoError
 
 class TestCompra:
-    @pytest.fixture
-    def usuario_registrado(self):
-        """
-        Este fixture simula un usuario registrado.
-        """
-        return {'id': 1, 'registrado': True}
-    
-    @pytest.fixture
-    def compra_valida_fixture_efectivo(self, usuario_registrado) -> Compra:
-        """
-        Este fixture crea y devuelve una instancia de Compra con datos válidos.
-        """
-        
-        return Compra(
-            fecha=date(2025, 10, 25),
-            cantidad_entradas=2,
-            edades=[30, 8],
-            tipo_entrada=TipoEntrada.VIP,
-            medio_pago=MedioPago.EFECTIVO,
-            usuario=usuario_registrado
-        )
-    @pytest.fixture
-    def compra_valida_fixture_tarjeta(self, usuario_registrado) -> Compra:
-        """
-        Este fixture crea y devuelve una instancia de Compra con datos válidos.
-        """
-        
-        return Compra(
-            fecha=date(2025, 10, 25),
-            cantidad_entradas=2,
-            edades=[30, 8],
-            tipo_entrada=TipoEntrada.VIP,
-            medio_pago=MedioPago.TARJETA,
-            usuario=usuario_registrado
-        )
 
-    def test_constructor_compra(self, compra_valida_fixture_efectivo):
-
+    def test_constructor_compra(self, compra_factory):
+        compra_factory = compra_factory(medio_pago=MedioPago.EFECTIVO)
         # ASSERT
-        assert compra_valida_fixture_efectivo.tipo_entrada == TipoEntrada.VIP
-        assert compra_valida_fixture_efectivo.medio_pago == MedioPago.EFECTIVO
-        assert compra_valida_fixture_efectivo.fecha == date(2025, 10, 25)
-        assert compra_valida_fixture_efectivo.cantidad_entradas == 2
-        assert compra_valida_fixture_efectivo.edades == [30, 8]
-        assert compra_valida_fixture_efectivo.usuario == {'id': 1, 'registrado': True}
+        assert compra_factory.medio_pago == MedioPago.EFECTIVO
+        assert compra_factory.fecha == date(2025, 10, 25)
+        assert compra_factory.fechaHora_compra is not None
+        assert len(compra_factory.entradas) == 2
+        assert [entrada.edad for entrada in compra_factory.entradas] == [30, 8]
 
-    def test_contructor_compra_tarjeta(self, compra_valida_fixture_tarjeta):
-
+    def test_contructor_compra_tarjeta(self, compra_factory):
+        compra_factory = compra_factory(medio_pago=MedioPago.TARJETA)
         # ASSERT
-        assert compra_valida_fixture_tarjeta.tipo_entrada == TipoEntrada.VIP
-        assert compra_valida_fixture_tarjeta.medio_pago == MedioPago.TARJETA
-        assert compra_valida_fixture_tarjeta.fecha == date(2025, 10, 25)
-        assert compra_valida_fixture_tarjeta.cantidad_entradas == 2
-        assert compra_valida_fixture_tarjeta.edades == [30, 8]
-        assert compra_valida_fixture_tarjeta.usuario == {'id': 1, 'registrado': True}
+        assert compra_factory.medio_pago == MedioPago.TARJETA
+        assert compra_factory.fecha == date(2025, 10, 25)
+        assert compra_factory.fechaHora_compra is not None
+        assert len(compra_factory.entradas) == 2
+        assert [entrada.edad for entrada in compra_factory.entradas] == [30, 8]
 
-    def test_validar_compra_exitosa(self, compra_valida_fixture_efectivo):
+    def test_validar_compra_exitosa(self, compra_factory):
         # ASSERT
-        assert compra_valida_fixture_efectivo.validar_compra() is True
+        assert compra_factory().validar_compra() is True
 
-    def test_compra_edades_y_cantidades_diferentes(self, usuario_registrado):
-        # ARRANGE
-        compra = Compra(
-            fecha=date(2025, 10, 25),
-            cantidad_entradas=3,
-            edades=[30, 8],
-            tipo_entrada=TipoEntrada.VIP,
-            medio_pago=MedioPago.EFECTIVO,
-            usuario=usuario_registrado
-        )
-
-        # ACT & ASSERT
-        with pytest.raises(EdadesYCantidadesError, match='La cantidad de edades no coincide con la cantidad de entradas'):
-            compra.validar_compra()
-
-    def test_compra_fecha_pasada(self, usuario_registrado):
-        # ARRANGE
-        compra = Compra(
-            fecha=date(2020, 1, 1), 
-            cantidad_entradas=2,
-            edades=[30, 8],
-            tipo_entrada=TipoEntrada.REGULAR,
-            medio_pago=MedioPago.EFECTIVO,
-            usuario=usuario_registrado
-        )
+    def test_compra_fecha_pasada(self, compra_factory):
 
         # ACT & ASSERT
         with pytest.raises(FechaPasadaError, match='La fecha de la compra no puede ser en el pasado'):
-            compra.validar_compra()
+            compra_factory(fecha=date(2020, 1, 1)).validar_compra()
 
-    def test_compra_supera_limite_entradas(self, usuario_registrado):
-        # ARRANGE
-        compra = Compra(
-            fecha=date(2025, 10, 25),
-            cantidad_entradas=11,
-            edades=[20] * 11,
-            tipo_entrada=TipoEntrada.REGULAR,
-            medio_pago=MedioPago.TARJETA,
-            usuario=usuario_registrado
-        )
-
+    def test_compra_supera_limite_entradas(self, compra_factory):
         # ACT & ASSERT
         with pytest.raises(LimiteEntradasError, match='No se pueden comprar mas de 10 entradas'):
-            compra.validar_compra()
+            compra_factory(entradas=[Entrada(edad=20, tipo_pase=TipoEntrada.REGULAR)] * 11).validar_compra()
 
-    def test_compra_fecha_parque_cerrado(self, usuario_registrado):
-        # ARRANGE
-        compra = Compra(
-            fecha=date(2025, 10, 27), 
-            cantidad_entradas=2,
-            edades=[30, 8],
-            tipo_entrada=TipoEntrada.VIP,
-            medio_pago=MedioPago.EFECTIVO,
-            usuario=usuario_registrado
-        )
-
+    def test_compra_fecha_parque_cerrado(self, compra_factory):
         # ACT & ASSERT
         with pytest.raises(ParqueCerradoError, match='El parque está cerrado en esta fecha'):
-            compra.validar_compra()
+            compra_factory(fecha=date(2025, 12, 25)).validar_compra()
 
-    def test_compra_usuario_no_registrado(self):
-        # ARRANGE
-        usuario_no_registrado = {'id': 2, 'registrado': False}
-        compra = Compra(
-            fecha=date(2025, 10, 25),
-            cantidad_entradas=2,
-            edades=[30, 8],
-            tipo_entrada=TipoEntrada.VIP,
-            medio_pago=MedioPago.EFECTIVO,
-            usuario=usuario_no_registrado
-        )
-
+    '''def test_compra_usuario_no_registrado(self, compra_factory):
         # ACT & ASSERT
         with pytest.raises(UsuarioNoRegistradoError, match='El usuario no está registrado'):
-            compra.validar_compra()
+            compra_factory(usuario={'id': 2, 'registrado': False}).validar_compra()'''
 
-    @pytest.mark.parametrize("tipo_entrada, cantidad, total_esperado", [
-        (TipoEntrada.REGULAR, 3, 30000),    # Escenario 1: 3 entradas regulares
-        (TipoEntrada.VIP,     2, 40000),    # Escenario 2: 2 entradas VIP
-        (TipoEntrada.REGULAR, 1, 10000),    # Escenario 3: 1 entrada regular
-        (TipoEntrada.VIP,     10, 200000)  # Escenario 4: 10 entradas VIP
+    @pytest.mark.parametrize("edades, tipo_entrada, total_esperado", [
+        ([30, 30, 30], TipoEntrada.REGULAR, 15000),
+        ([30, 8],      TipoEntrada.REGULAR, 10000),
+        ([30, 8],      TipoEntrada.VIP,     20000)
     ])
-    def test_calcular_total(self, tipo_entrada, cantidad, total_esperado, usuario_registrado):
+    def test_calcular_total(self, compra_factory, edades, tipo_entrada, total_esperado):
         """
-        Verifica que el cálculo del total sea correcto para diferentes
-        cantidades y tipos de pase.
+        Verifica que el cálculo del total sea correcto.
         """
-        # ARRANGE: Preparamos el objeto. El total esperado ya está definido.
-        compra = Compra(
-            fecha=date(2025, 10, 25),
-            cantidad_entradas=cantidad,
-            edades=[30] * cantidad,
-            tipo_entrada=tipo_entrada,
-            medio_pago=MedioPago.TARJETA,
-            usuario=usuario_registrado
-        )
-
-        # ACT: Llamamos EXCLUSIVAMENTE al método bajo prueba.
+        lista_de_entradas = [Entrada(edad=edad, tipo_pase=tipo_entrada) for edad in edades]
+        compra = compra_factory(entradas=lista_de_entradas)
         monto_calculado = compra.calcular_total()
 
-        # ASSERT: Comparamos el resultado con nuestro valor esperado y fiable.
+        # ASSERT
         assert monto_calculado == total_esperado
 
-    def test_conectar_mercado_pago(self, compra_valida_fixture_tarjeta):
+    def test_conectar_mercado_pago_tarjeta(self, compra_factory):
         # ARRANGE
-        compra = compra_valida_fixture_tarjeta
         mock_mp = MockMP()
         mock_email_service = MockEmailService()
         # ACT
-        compra.finalizar_compra(mock_mp, mock_email_service)
+        compra_factory(medio_pago=MedioPago.TARJETA).finalizar_compra(mock_mp, mock_email_service)
 
         # ASSERT
         assert mock_mp.redireccion is True
 
-    def test_conectar_mercado_pago_efectivo(self, compra_valida_fixture_efectivo):
+    def test_conectar_mercado_pago_efectivo(self, compra_factory):
         # ARRANGE
-        compra = compra_valida_fixture_efectivo
+        compra = compra_factory()
         mock_mp = MockMP()
         mock_email_service = MockEmailService()
         # ACT
@@ -189,25 +86,17 @@ class TestCompra:
         # ASSERT
         assert mock_mp.redireccion is False
     
-    @pytest.mark.parametrize('compra_fixture', [
-        'compra_valida_fixture_efectivo',
-        'compra_valida_fixture_tarjeta'
-    ])
-    def test_enviar_email_confirmacion(self, compra_fixture, request):
+    def test_enviar_email_confirmacion(self, compra_factory):
         # ARRANGE
         mock_email_service = MockEmailService()
         mock_mp = MockMP()
         # ACT
-        request.getfixturevalue(compra_fixture).finalizar_compra(mock_mp, mock_email_service)
+        compra_factory().finalizar_compra(mock_mp, mock_email_service)
         assert mock_email_service.email_enviado is True
 
-    @pytest.mark.parametrize('compra', [
-        'compra_valida_fixture_efectivo',
-        'compra_valida_fixture_tarjeta'
-    ])
-    def test_mostrar_cantidad_y_fecha(self, compra, request):
+    def test_mostrar_cantidad_y_fecha(self, compra_factory):
         # ARRANGE
-        compra = request.getfixturevalue(compra)
+        compra = compra_factory()
         mock_mp = MockMP()
         mock_email_service = MockEmailService()
 

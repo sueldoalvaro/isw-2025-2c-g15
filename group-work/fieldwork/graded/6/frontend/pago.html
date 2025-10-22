@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pago Seguro - Mercado Pago</title>
+    <link rel="stylesheet" href="/src/pago.css">
+</head>
+<body>
+    <div class="checkout-container">
+        <!-- Header tipo Mercado Pago -->
+        <header class="mp-header">
+            <div class="logo-container">
+                <img src="/public/mercado-pago-logo.jpeg" alt="Mercado Pago" class="mp-logo">
+            </div>
+            <div class="secure-badge">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8 0L2 3V7C2 10.866 4.756 14.238 8 15C11.244 14.238 14 10.866 14 7V3L8 0Z" fill="#00A650"/>
+                    <path d="M7 10L5 8L5.7 7.3L7 8.6L10.3 5.3L11 6L7 10Z" fill="white"/>
+                </svg>
+                <span>Pago seguro</span>
+            </div>
+        </header>
+
+        <main class="checkout-main">
+            <!-- Resumen de compra -->
+            <aside class="order-summary">
+                <h2>Resumen de compra</h2>
+                <div class="summary-item">
+                    <span class="summary-label">Producto</span>
+                    <span class="summary-value" id="producto-descripcion">Entradas Parque Temático</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Cantidad</span>
+                    <span class="summary-value" id="cantidad-entradas">-</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-item summary-total">
+                    <span class="summary-label">Total</span>
+                    <span class="summary-value" id="total-pago">$0</span>
+                </div>
+            </aside>
+
+            <!-- Formulario de pago -->
+            <section class="payment-form-container">
+                <h1>Completa tus datos</h1>
+                
+                <!-- Mensaje de estado -->
+                <div id="mensaje-estado" class="mensaje-estado oculto"></div>
+
+                <form id="payment-form">
+                    <!-- Número de tarjeta -->
+                    <div class="form-group">
+                        <label for="numero-tarjeta">
+                            Número de tarjeta
+                            <span class="required">*</span>
+                        </label>
+                        <div class="input-with-icon">
+                            <input 
+                                type="text" 
+                                id="numero-tarjeta" 
+                                name="numero-tarjeta"
+                                placeholder="0000 0000 0000 0000"
+                                maxlength="19"
+                                required
+                                autocomplete="cc-number"
+                            >
+                            <div class="card-brands" id="card-brand"></div>
+                        </div>
+                        <small class="input-help">Ingresa los 16 dígitos de tu tarjeta</small>
+                    </div>
+
+                    <!-- Titular -->
+                    <div class="form-group">
+                        <label for="titular">
+                            Nombre del titular
+                            <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="titular" 
+                            name="titular"
+                            placeholder="Nombre tal como figura en la tarjeta"
+                            required
+                            autocomplete="cc-name"
+                        >
+                        <small class="input-help">Tal como aparece en tu tarjeta</small>
+                    </div>
+
+                    <!-- Vencimiento y CVV -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vencimiento-mes">
+                                Vencimiento
+                                <span class="required">*</span>
+                            </label>
+                            <div class="expiry-inputs">
+                                <input 
+                                    type="text" 
+                                    id="vencimiento-mes" 
+                                    name="vencimiento-mes"
+                                    placeholder="MM"
+                                    maxlength="2"
+                                    required
+                                    autocomplete="cc-exp-month"
+                                >
+                                <span class="separator">/</span>
+                                <input 
+                                    type="text" 
+                                    id="vencimiento-anio" 
+                                    name="vencimiento-anio"
+                                    placeholder="AA"
+                                    maxlength="2"
+                                    required
+                                    autocomplete="cc-exp-year"
+                                >
+                            </div>
+                            <small class="input-help">Mes y año</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cvv">
+                                Código de seguridad
+                                <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="cvv" 
+                                name="cvv"
+                                placeholder="CVV"
+                                maxlength="4"
+                                required
+                                autocomplete="cc-csc"
+                            >
+                            <small class="input-help">3 o 4 dígitos</small>
+                        </div>
+                    </div>
+
+                    <!-- Botón de pago -->
+                    <button type="submit" class="btn-pagar" id="btn-pagar">
+                        <span class="btn-text">Pagar</span>
+                        <span class="btn-spinner oculto"></span>
+                    </button>
+
+                    <!-- Tarjetas de prueba -->
+                    <div class="test-cards">
+                        <details>
+                            <summary>🧪 Tarjetas de prueba</summary>
+                            <div class="test-cards-list">
+                                <div class="test-card">
+                                    <strong>✅ Aprobada:</strong>
+                                    <code>4509 9535 6623 3704</code>
+                                </div>
+                                <div class="test-card">
+                                    <strong>❌ Rechazada:</strong>
+                                    <code>4111 1111 1111 1111</code>
+                                </div>
+                                <div class="test-card">
+                                    <strong>⏳ Pendiente:</strong>
+                                    <code>4000 0000 0000 0002</code>
+                                </div>
+                                <div class="test-card-info">
+                                    CVV: cualquier 3 dígitos (ej: 123)<br>
+                                    Vencimiento: cualquier fecha futura (ej: 12/28)<br>
+                                    Titular: cualquier nombre
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </form>
+
+                <!-- Footer con seguridad -->
+                <footer class="payment-footer">
+                    <div class="security-badges">
+                        <div class="badge">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <path d="M10 0L3 4V9C3 14.25 6.7 19.05 10 20C13.3 19.05 17 14.25 17 9V4L10 0Z" fill="#00A650"/>
+                            </svg>
+                            <span>Protección al comprador</span>
+                        </div>
+                        <div class="badge">
+                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                <rect x="3" y="7" width="14" height="10" rx="1" fill="#FFA500"/>
+                                <rect x="7" y="4" width="6" height="5" rx="1" fill="#FFA500"/>
+                            </svg>
+                            <span>Datos encriptados</span>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+        </main>
+    </div>
+
+    <script src="/src/pago.js"></script>
+</body>
+</html>

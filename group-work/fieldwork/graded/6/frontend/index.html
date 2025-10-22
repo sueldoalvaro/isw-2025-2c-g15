@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compra de Entradas - EcoHarmony Park</title>
+    <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+
+    <div id="alert-container"></div>
+
+    <!-- Modal de confirmación -->
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content">
+            <h2>Confirmar Compra</h2>
+            <div id="purchase-summary"></div>
+            <div class="modal-actions">
+                <button id="confirm-btn" class="btn-confirm">Confirmar Compra</button>
+                <button id="cancel-btn" class="btn-cancel">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>🎟️ Compra de Entradas</h1>
+        <form id="purchase-form">
+            <div class="form-group">
+                <label for="visit-date">Fecha de Visita</label>
+                <input type="date" id="visit-date" name="visit-date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="quantity">Cantidad de Entradas (Máx. 10)</label>
+                <input type="number" id="quantity" name="quantity" min="1" max="10" required>
+            </div>
+
+            <div class="form-group">
+                <label>Datos de los Visitantes</label>
+                <div id="visitors-container"></div>
+                <p class="form-hint">Ingresá la edad y el tipo de entrada para cada visitante.</p>
+            </div>
+
+            <div class="form-group">
+                <label>Forma de Pago</label>
+                <div class="radio-group">
+                    <label><input type="radio" name="payment-method" value="EFECTIVO" checked> Efectivo</label>
+                    <label><input type="radio" name="payment-method" value="TARJETA"> Tarjeta</label>
+                </div>
+                <div class="payment-info" id="payment-info">
+                    <p class="info-efectivo" id="info-efectivo">
+                        ℹ️ <strong>Importante:</strong> Las entradas compradas en efectivo deben pagarse en la <strong>boletería del parque el día de la visita</strong>.
+                    </p>
+                    <p class="info-tarjeta" id="info-tarjeta">
+                        💳 <strong>Pago con tarjeta:</strong> Serás redirigido a un checkout seguro de Mercado Pago para completar tu pago.
+                    </p>
+                </div>
+            </div>
+
+            <button type="submit">Comprar Entradas</button>
+        </form>
+    </div>
+    <script type="module" src="src/main.js"></script>
+</body>
+</html>

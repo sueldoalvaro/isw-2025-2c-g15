@@ -1,0 +1,228 @@
+
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f4f8; color: #333; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+.container { background-color: #fff; padding: 2rem 3rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); width: 100%; max-width: 500px; }
+h1 { color: #2c5282; text-align: center; margin-bottom: 1.5rem; }
+.form-group { margin-bottom: 1.25rem; }
+label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #4a5568; }
+input[type="date"], input[type="number"] { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; transition: border-color 0.2s; }
+input:focus { outline: none; border-color: #4299e1; box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5); }
+.radio-group label { display: inline-block; margin-right: 1rem; font-weight: 500; }
+button { width: 100%; padding: 0.85rem; background-color: #38a169; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: background-color 0.2s; }
+button:hover { background-color: #2f855a; }
+#alert-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 1rem 1.5rem; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.2); z-index: 1000; display: none; animation: fadeInDown 0.5s forwards; }
+.success { background-color: #38a169; color: white; }
+.error { background-color: #e53e3e; color: white; }
+@keyframes fadeInDown { from { opacity: 0; transform: translate(-50%, -20px); } to { opacity: 1; transform: translate(-50%, 0); } }
+/* Estilos para las tarjetas de visitantes */
+#visitors-container { display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem; }
+.visitor-card { background-color: #f7fafc; border: 2px solid #e2e8f0; border-radius: 8px; padding: 1rem; transition: border-color 0.2s; }
+.visitor-card:hover { border-color: #4299e1; }
+.visitor-card h3 { margin: 0 0 1rem 0; color: #2c5282; font-size: 1rem; font-weight: 600; }
+.visitor-card .input-group { margin-bottom: 0.75rem; }
+.visitor-card .input-group:last-child { margin-bottom: 0; }
+.visitor-card label { display: block; margin-bottom: 0.4rem; font-size: 0.9rem; font-weight: 600; color: #4a5568; }
+.visitor-card input, .visitor-card select { width: 100%; padding: 0.6rem; border: 1px solid #cbd5e0; border-radius: 6px; box-sizing: border-box; font-size: 0.95rem; }
+.visitor-card select { background-color: white; cursor: pointer; }
+.visitor-card input:focus, .visitor-card select:focus { outline: none; border-color: #4299e1; box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.3); }
+.form-hint { font-size: 0.8rem; color: #718096; margin-top: 0.5rem; }
+
+/* Estilos del modal de confirmación */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from { 
+        opacity: 0;
+        transform: translateY(-50px); 
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0); 
+    }
+}
+
+.modal-content h2 {
+    color: #2c5282;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.summary-section {
+    margin-bottom: 1.5rem;
+}
+
+.summary-section p {
+    margin: 0.5rem 0;
+    font-size: 1rem;
+    color: #4a5568;
+}
+
+.summary-section h3 {
+    color: #2c5282;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.ticket-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ticket-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background-color: #f7fafc;
+    border-radius: 6px;
+    border-left: 3px solid #4299e1;
+}
+
+.ticket-info {
+    color: #4a5568;
+}
+
+.ticket-price {
+    font-weight: 700;
+    color: #2c5282;
+}
+
+.summary-total {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: #e6fffa;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.total-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #38a169;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.modal-actions button {
+    flex: 1;
+    padding: 0.85rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-confirm {
+    background-color: #38a169;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background-color: #2f855a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(56, 161, 105, 0.4);
+}
+
+.btn-cancel {
+    background-color: #718096;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #4a5568;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(113, 128, 150, 0.4);
+}
+
+/* Información de pago */
+.payment-info {
+    margin-top: 1rem;
+}
+
+.info-efectivo {
+    background-color: #fff8e1;
+    border-left: 4px solid #ffa726;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 0;
+    font-size: 0.95rem;
+    color: #5d4037;
+    line-height: 1.5;
+}
+
+.info-tarjeta {
+    background-color: #e3f2fd;
+    border-left: 4px solid #42a5f5;
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 0;
+    font-size: 0.95rem;
+    color: #1565c0;
+    line-height: 1.5;
+    display: none;
+}
+
+.payment-info strong {
+    font-weight: 700;
+}
+
+/* Advertencia en el modal */
+.payment-warning {
+    margin-top: 1.5rem;
+    background-color: #fff3cd;
+    border: 2px solid #ffc107;
+    border-radius: 8px;
+    padding: 1rem;
+    text-align: center;
+}
+
+.payment-warning p {
+    margin: 0;
+    color: #856404;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.payment-warning strong {
+    font-weight: 700;
+}
+

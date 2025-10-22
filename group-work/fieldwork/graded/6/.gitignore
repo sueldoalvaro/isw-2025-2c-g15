@@ -5,6 +5,12 @@ __pycache__/
 .env
 .pytest_cache/
 
+# SQLite (Flask instance)
+instance/
+instance/*.db
+*.sqlite
+*.db
+
 # Node.js / Vite (para tu futuro frontend)
 node_modules/
 dist/
