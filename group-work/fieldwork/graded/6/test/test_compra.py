@@ -125,3 +125,36 @@ def test_falla_al_comprar_mas_de_diez_entradas(mocker):
             email="cliente@gmail.com",
             tipo_pase="regular"
         )
+
+def test_monto_negativo():
+    """
+    La compra no debe permitir montos negativos
+    """
+
+    with pytest.raises(ValueError) as error:
+        compra = Compra(-100, "2025-12-25", "efectivo")
+    assert str(error.value) == "El monto debe ser positivo"
+
+def test_monto_cero():
+    """
+    La compra no debe permitir monto cero
+    """
+    with pytest.raises(ValueError) as error:
+        compra = Compra(0, "2025-12-25", "efectivo")
+    assert str(error.value) == "El monto debe ser positivo"
+
+def test_fecha_pasada():
+    """
+    No se pueden comprar entradas para fechas pasadas
+    """
+    with pytest.raises(ValueError) as error:
+        compra = Compra(100, "2024-10-29", "efectivo")
+    assert str(error.value) == "La fecha no puede ser anterior a hoy"
+
+def test_fecha_formato_invalido():
+    """
+    La fecha debe tener formato válido YYYY-MM-DD
+    """
+    with pytest.raises(ValueError) as error:
+        compra = Compra(100, "29-10-2025", "efectivo")
+    assert str(error.value) == "Formato de fecha inválido"
