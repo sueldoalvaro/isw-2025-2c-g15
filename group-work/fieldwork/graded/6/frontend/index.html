@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Parque - Compra de Entradas</title>
+    <link rel="stylesheet" href="src/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>Parque — Comprar Entradas</h1>
+        <div class="park-info">
+          <p class="lead">Complete los datos para su visita</p>
+          <p class="park-hours">
+            🕒 Horario: Lunes a Sábados de 9:00 a 18:00 hs
+          </p>
+        </div>
+      </header>
+
+      <form id="compraForm" class="card" novalidate>
+        <label>
+          Fecha de visita
+          <input
+            type="date"
+            id="fecha"
+            required
+            data-error="Seleccione una fecha válida (lunes a sábados)"
+          />
+          <small class="field-help">Seleccione un día de lunes a sábados</small>
+        </label>
+
+        <label>
+          Cantidad de entradas
+          <input
+            type="number"
+            id="cantidad"
+            min="1"
+            max="10"
+            value="1"
+            required
+            data-error="La cantidad debe estar entre 1 y 10 entradas"
+          />
+        </label>
+
+        <div id="ageFieldsContainer" class="age-fields">
+          <!-- Age fields will be added dynamically -->
+        </div>
+
+        <label>
+          Tipo de pase
+          <select id="tipo_pase" required>
+            <option value="regular" selected>Regular - $1000</option>
+            <option value="vip">VIP - $2000</option>
+          </select>
+        </label>
+
+        <label>
+          Método de pago
+          <select id="metodo_pago" required>
+            <option value="efectivo" selected>Efectivo</option>
+            <option value="tarjeta">Tarjeta</option>
+          </select>
+        </label>
+
+        <label>
+          Email
+          <input
+            type="email"
+            id="email"
+            placeholder="ejemplo@correo.com"
+            required
+          />
+        </label>
+
+        <div id="tarjetaFields" class="hidden">
+          <label>
+            N° Tarjeta
+            <input
+              type="text"
+              id="numTarjeta"
+              placeholder="1234-5678-9012-3456"
+              pattern="\d{4}-\d{4}-\d{4}-\d{4}"
+              data-error="Formato: XXXX-XXXX-XXXX-XXXX"
+            />
+          </label>
+          <label>
+            Vencimiento
+            <input
+              type="text"
+              id="vencimiento"
+              placeholder="MM/AA"
+              pattern="(0[1-9]|1[0-2])\/\d{2}"
+              data-error="Formato: MM/AA"
+            />
+          </label>
+          <label>
+            CVV
+            <input
+              type="text"
+              id="cvv"
+              placeholder="123"
+              pattern="\d{3}"
+              maxlength="3"
+              data-error="3 dígitos numéricos"
+            />
+          </label>
+        </div>
+
+        <button type="submit" class="btn">Confirmar compra</button>
+      </form>
+
+      <div id="msg" role="status"></div>
+    </main>
+
+    <!-- Validation messages -->
+    <div id="validationErrors" class="validation-errors hidden"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Confirmar compra</h2>
+        <div id="resumenCompra"></div>
+        <div class="modal-buttons">
+          <button id="confirmCompra" class="btn">Comprar</button>
+          <button id="cancelCompra" class="btn secondary">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="src/main.js"></script>
+  </body>
+</html>
