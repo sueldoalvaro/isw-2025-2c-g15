@@ -96,9 +96,10 @@ isw-2025-2c-g14/
 
 ---
 
-## 📌 Criterios de baseline  
+## 📌Criterios de Línea Base
 
-Los **CIs** que conforman la baseline del proyecto serán definidos por los contribuyentes del grupo luego de cada parcial aprobado, proyectos de investigación completados y fieldworks evaluados.  
-Estos ítems serán **taggeados en el repositorio** con el feedback recibido de los expertos.
+Los elementos de configuración en un trabajo grupal serán etiquetados y considerados parte de la línea base después de la entrega de dicho trabajo para ser evaluado. Esto permite futuras referencias e implica un acuerdo grupal sobre la configuración de la propia entrega.
+
+En cuanto a los elementos en las carpetas de bibliografía, material de clase y otros, estos serán considerados parte de la línea base porque fueron proporcionados por la cátedra. Los cambios a los elementos en la línea base deben ser aprobados por el comité de control de cambios.
 
 ---
